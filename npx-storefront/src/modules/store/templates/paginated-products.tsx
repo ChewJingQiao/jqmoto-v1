@@ -1,0 +1,99 @@
+import { listProductsWithSort } from "@lib/data/products"
+import { getRegion } from "@lib/data/regions"
+import ProductPreview from "@modules/products/components/product-preview"
+import LoadMore from "@modules/store/components/load-more"
+import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
+
+const PRODUCT_LIMIT = 12
+
+type PaginatedProductsParams = {
+  limit: number
+  collection_id?: string[]
+  category_id?: string[]
+  id?: string[]
+  order?: string
+}
+
+export default async function PaginatedProducts({
+  sortBy,
+  page,
+  collectionId,
+  categoryId,
+  productsIds,
+  typeId,
+  countryCode,
+}: {
+  sortBy?: SortOptions
+  page: number
+  collectionId?: string
+  categoryId?: string
+  productsIds?: string[]
+  typeId?: string
+  countryCode: string
+}) {
+  const queryParams: PaginatedProductsParams = {
+    limit: 12,
+  }
+
+  if (collectionId) {
+    queryParams["collection_id"] = [collectionId]
+  }
+
+  if (categoryId) {
+    queryParams["category_id"] = [categoryId]
+  }
+
+  if (productsIds) {
+    queryParams["id"] = productsIds
+  }
+
+  if (typeId) {
+    queryParams["type_id"] = [typeId]
+  }
+
+  if (sortBy === "created_at") {
+    queryParams["order"] = "created_at"
+  }
+
+  const region = await getRegion(countryCode)
+
+  if (!region) {
+    return null
+  }
+
+  const pageSize = PRODUCT_LIMIT * page
+
+  let {
+    response: { products, count },
+  } = await listProductsWithSort({
+    page: 1,
+    queryParams: {
+      ...queryParams,
+      limit: pageSize,
+    },
+    sortBy,
+    countryCode,
+  })
+
+  const totalPages = Math.ceil(count / PRODUCT_LIMIT)
+
+  return (
+    <>
+      <ul
+        className="grid grid-cols-2 w-full small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8"
+        data-testid="products-list"
+      >
+        {products.map((p) => {
+          return (
+            <li key={p.id}>
+              <ProductPreview product={p} region={region} thumbnailSize="square" />
+            </li>
+          )
+        })}
+      </ul>
+      {totalPages > 1 && (
+        <LoadMore page={page} totalPages={totalPages} />
+      )}
+    </>
+  )
+}
