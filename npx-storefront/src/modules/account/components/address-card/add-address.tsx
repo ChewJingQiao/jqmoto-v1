@@ -61,7 +61,7 @@ const AddAddress = ({
         <Modal.Title>
           <Heading className="mb-2">Add address</Heading>
         </Modal.Title>
-        <form action={formAction}>
+        <form action={formAction} className="w-full">
           <Modal.Body>
             <div className="flex flex-col gap-y-2">
               <div className="grid grid-cols-2 gap-x-2">
@@ -145,18 +145,18 @@ const AddAddress = ({
             )}
           </Modal.Body>
           <Modal.Footer>
-            <div className="flex gap-3 mt-6">
-              <Button
-                type="reset"
-                variant="secondary"
-                onClick={close}
-                className="h-10"
-                data-testid="cancel-button"
-              >
-                Cancel
-              </Button>
-              <SubmitButton data-testid="save-button">Save</SubmitButton>
-            </div>
+            <Button
+              type="reset"
+              variant="secondary"
+              onClick={close}
+              className="h-10 w-32"
+              data-testid="cancel-button"
+            >
+              Cancel
+            </Button>
+            <SubmitButton data-testid="save-button" className="h-10 w-32">
+              Save
+            </SubmitButton>
           </Modal.Footer>
         </form>
       </Modal>
