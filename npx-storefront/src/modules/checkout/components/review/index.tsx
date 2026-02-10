@@ -1,6 +1,7 @@
 "use client"
 
 import { Heading, Text, clx } from "@medusajs/ui"
+import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
 import PaymentButton from "../payment-button"
 import { useSearchParams } from "next/navigation"
@@ -38,10 +39,35 @@ const Review = ({ cart }: { cart: any }) => {
           <div className="flex items-start gap-x-1 w-full mb-6">
             <div className="w-full">
               <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                By clicking the Place Order button, you confirm that you have
-                read, understand and accept our Terms of Use, Terms of Sale and
-                Returns Policy and acknowledge that you have read Medusa
-                Store&apos;s Privacy Policy.
+                By clicking Place Order, you agree to our{" "}
+                <LocalizedClientLink
+                  href="/content/terms-of-use"
+                  className="font-medium text-blue-600 underline hover:text-blue-700"
+                >
+                  Terms of Use
+                </LocalizedClientLink>
+                ,{" "}
+                <LocalizedClientLink
+                  href="/content/terms-of-sale"
+                  className="font-medium text-blue-600 underline hover:text-blue-700"
+                >
+                  Terms of Sale
+                </LocalizedClientLink>
+                ,{" "}
+                <LocalizedClientLink
+                  href="/returns-exchanges"
+                  className="font-medium text-blue-600 underline hover:text-blue-700"
+                >
+                  Returns Policy
+                </LocalizedClientLink>{" "}
+                and acknowledge our{" "}
+                <LocalizedClientLink
+                  href="/content/privacy-policy"
+                  className="font-medium text-blue-600 underline hover:text-blue-700"
+                >
+                  Privacy Policy
+                </LocalizedClientLink>
+                .
               </Text>
             </div>
           </div>
