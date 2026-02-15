@@ -2,6 +2,8 @@ import { loadEnv, defineConfig } from '@medusajs/framework/utils'
 
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
+const backendUrl = process.env.MEDUSA_BACKEND_URL?.replace(/\/$/, "")
+
 module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
@@ -14,6 +16,25 @@ module.exports = defineConfig({
     }
   },
   admin: {
-    backendUrl: process.env.MEDUSA_BACKEND_URL,
+    backendUrl,
   },
+  modules: [
+    {
+      resolve: "@medusajs/medusa/file",
+      options: {
+        providers: [
+          {
+            resolve: "@medusajs/medusa/file-local",
+            id: "local",
+            options: {
+              // Without this, file-local defaults to http://localhost:9000/static.
+              backend_url: backendUrl
+                ? `${backendUrl}/static`
+                : "http://localhost:9000/static",
+            },
+          },
+        ],
+      },
+    },
+  ],
 })
